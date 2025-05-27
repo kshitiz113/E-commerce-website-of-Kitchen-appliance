@@ -1,103 +1,131 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import {
+  FiSun,
+  FiMoon,
+  FiShoppingBag,
+  FiArrowRight,
+  FiCheckCircle,
+} from 'react-icons/fi';
+
+export default function HomePage() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Load initial theme from localStorage or system preference
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      setDarkMode(true);
+    } else if (storedTheme === 'light') {
+      setDarkMode(false);
+    } else {
+      // Fallback to system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(prefersDark);
+    }
+  }, []);
+
+  // Apply dark mode class to <html>
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+      <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
+        {/* Header with theme toggle */}
+        <header className="w-full flex justify-end mb-8">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-md hover:shadow-lg transition-shadow"
+            aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+          >
+            {darkMode ? (
+              <FiSun className="text-yellow-400 text-xl" />
+            ) : (
+              <FiMoon className="text-gray-700 text-xl" />
+            )}
+          </button>
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Main content */}
+        <div className="max-w-2xl w-full text-center space-y-10">
+          {/* Hero section */}
+          <div className="space-y-6">
+            <div className="flex justify-center">
+              <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                <FiShoppingBag className="text-4xl text-blue-600 dark:text-blue-400" />
+              </div>
+            </div>
+
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              Welcome to Spargen
+            </h1>
+
+            <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+              The future of e-commerce is here. Discover, compare, and purchase with unprecedented ease.
+            </p>
+          </div>
+
+          {/* Features grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+            {[
+              { title: 'Smart Search', desc: 'Find exactly what you need with AI-powered search' },
+              { title: 'Price Tracking', desc: 'Never overpay with our dynamic pricing alerts' },
+              { title: 'Instant Checkout', desc: 'One-click purchasing across all vendors' },
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <FiCheckCircle className="text-blue-500 dark:text-blue-400 text-2xl mb-3 mx-auto" />
+                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA section */}
+          <div className="space-y-4">
+            <Link href="/signup" className="block">
+              <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                Start Shopping Now <FiArrowRight />
+              </button>
+            </Link>
+
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              Already have an account?{' '}
+              <Link href="/login" className="text-blue-600 dark:text-blue-400 hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-gray-500 dark:text-gray-400 text-sm">
+          <p>© {new Date().getFullYear()} Spargen. All rights reserved.</p>
+          <div className="flex justify-center space-x-4 mt-2">
+            <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              Contact Us
+            </Link>
+          </div>
+        </footer>
+      </div>
+    </main>
   );
 }
