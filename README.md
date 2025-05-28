@@ -42,7 +42,7 @@ An e-commerce platform built with **Next.js** and **MySQL** that supports admin 
 
 ```bash
 git clone https://github.com/kshitiz113/E-commerce-website-of-Kitchen-appliance.git
-cd technicals
+cd my-app
 
 npm install
  Create a .env.local file and add your MySQL credentials:
